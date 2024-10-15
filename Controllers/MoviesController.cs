@@ -173,9 +173,4 @@ namespace MovieApp.Controllers
 
     }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> Test
 }
