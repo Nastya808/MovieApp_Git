@@ -44,6 +44,35 @@ namespace MovieApp.Controllers
 
             return View(movie);
         }
+        // GET: Movies/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Movies/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Title,Director,Genre,Year,Description")] Movie movie, IFormFile poster)
+        {
+            if (ModelState.IsValid)
+            {
+                if (poster != null)
+                {
+                    string path = Path.Combine(_appEnvironment.WebRootPath, "posters", poster.FileName);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await poster.CopyToAsync(stream);
+                    }
+                    movie.Poster = "/posters/" + poster.FileName;
+                }
+
+                _context.Add(movie);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(movie);
+        }
 
     }
 }
